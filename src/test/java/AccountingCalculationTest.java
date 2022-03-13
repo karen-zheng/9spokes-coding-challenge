@@ -18,8 +18,32 @@ public class AccountingCalculationTest {
 
     @Test
     void returnsTotalRevenue() throws IOException {
-        String result = AccountingCalculator.calculateRevenue(entries);
-        assertEquals("32431.0", result );
+        Double result = AccountingCalculator.calculateRevenue(entries);
+        assertEquals(32431.0, result );
+    }
+
+    @Test
+    void returnsTotalExpense() {
+        Double result = AccountingCalculator.calculateExpense(entries);
+        assertEquals(36529.68, result );
+    }
+
+    @Test
+    void returnsGrossProfitMargin() {
+        Double result = AccountingCalculator.calculateGrossProfitMargin(entries);
+        assertEquals(2.9788554161142113, result );
+    }
+
+    @Test
+    void returnsNetProfitMargin() {
+        Double result = AccountingCalculator.calculateNetProfitMargin(entries);
+        assertEquals(-0.1263815485183929, result );
+    }
+
+    @Test
+    void returnsWorkingCapitalRatio() {
+        Double result = AccountingCalculator.calculateWorkingCapitalRatio(entries);
+        assertEquals(0.7130127831205757, result );
     }
 
 }
