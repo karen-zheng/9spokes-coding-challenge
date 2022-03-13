@@ -2,30 +2,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 import java.io.FileReader;
 import java.io.IOException;
+import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.stream.DoubleStream;
 
 public class AccountingCalculator {
     public static void main(String[] args) throws IOException {
-        //Read file
         try {
             ObjectMapper mapper = new ObjectMapper();
             AccountingDataModel accountingData = mapper.readValue(
                     new FileReader("src/main/resources/data.json"), AccountingDataModel.class);
 
             EntryModel[] entries = accountingData.getData();
-            String revenue = calculateRevenue(entries).toString();
-            String expense = calculateExpense(entries).toString();
-            String gpm = calculateGrossProfitMargin(entries).toString();
-            String npm = calculateNetProfitMargin(entries).toString();
-            String wcr = calculateWorkingCapitalRatio(entries).toString();
+            Double revenue = calculateRevenue(entries);
+            Double expense = calculateExpense(entries);
+            Double gpm = calculateGrossProfitMargin(entries);
+            Double npm = calculateNetProfitMargin(entries);
+            Double wcr = calculateWorkingCapitalRatio(entries);
 
-            //Return results
-            System.out.print("Revenue: " + revenue + " \n" +
-                    "Expenses: " + expense + " \n" +
-                    "Gross Profit Margin: " + gpm + "\n" +
-                    "Net Profit Margin: " + npm + "\n" +
-                    "Working Capital Ratio: " + wcr);
+            System.out.print("Revenue: " + formatDollarValue(revenue) + " \n" +
+                    "Expenses: " + formatDollarValue(expense) + " \n" +
+                    "Gross Profit Margin: " + formatPercentage(gpm) + "\n" +
+                    "Net Profit Margin: " + formatPercentage(npm) + "\n" +
+                    "Working Capital Ratio: " + formatPercentage(wcr));
         } catch (Exception e){
             System.out.println(e);
         }
@@ -47,7 +46,7 @@ public class AccountingCalculator {
 
     static Double calculateGrossProfitMargin(EntryModel[] entries) {
         Double result = Arrays.stream(entries)
-                .filter(entry -> "sales".equals(entry.getAccount_type()) | "debit".equals(entry.getValue_type()))
+                .filter(entry -> "sales".equals(entry.getAccount_type()) & "debit".equals(entry.getValue_type()))
                 .mapToDouble(EntryModel::getTotal_value).sum();
 
         Double revenue = calculateRevenue(entries);
@@ -116,9 +115,12 @@ public class AccountingCalculator {
         return assetsDebit - assetsCredit;
     }
 
+    static String formatDollarValue(Double amount) {
+        return "$" + new DecimalFormat("###,###,###,###").format(amount);
+    }
 
-    //Formatting
-
-
+    static String formatPercentage(Double percentage) {
+        return new DecimalFormat("#.#").format(percentage * 100) + "%";
+    }
 
 }

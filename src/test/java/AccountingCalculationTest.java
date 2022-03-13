@@ -31,7 +31,7 @@ public class AccountingCalculationTest {
     @Test
     void returnsGrossProfitMargin() {
         Double result = AccountingCalculator.calculateGrossProfitMargin(entries);
-        assertEquals(2.9788554161142113, result );
+        assertEquals(0.0, result );
     }
 
     @Test
@@ -44,6 +44,18 @@ public class AccountingCalculationTest {
     void returnsWorkingCapitalRatio() {
         Double result = AccountingCalculator.calculateWorkingCapitalRatio(entries);
         assertEquals(0.7130127831205757, result );
+    }
+
+    @Test
+    void percentageFormat() {
+        String result = AccountingCalculator.formatPercentage(0.7523);
+        assertEquals(result,"75.2%");
+    }
+
+    @Test
+    void dollarFormat() {
+        String result = AccountingCalculator.formatDollarValue(1234567.890);
+        assertEquals(result,"$1,234,568");
     }
 
 }
